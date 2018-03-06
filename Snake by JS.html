@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+
+	<body >
+
+
+
+		<div align="center"><canvas id="canvas" width="600px" height= "600px" ></canvas></div>
+
+		<div align="center">Powered by Ahmed Osama.</canvas></div>
+
+		<div   style="    position: absolute; top: 80px; width: 200px;  height: 100px;" >
+		<p>Type a color:</p>
+		<p>.</p>
+
+
+		<p>Snack Color:<input value="#741b47" align="center" type="textbox" id="color1" valign="top"></input></p>
+		<p>Land Color:<input value="#d9d2e9"  align="center" type="textbox" id="color2" valign="top"></input></p>
+		<p>Food Color:<input value="#999999" align="center" type="textbox" id="color3" valign="top"></input></p>
+		<p>Border Color<input value="gray" align="center" type="textbox" id="color4" valign="top"></input></p>
+		<p>
+			<input type="button" value="Color"  align="center"  id="color" valign="top" onclick="play()"></input>
+			<input type="button" value="Default Color"  align="center"  id="color" valign="top" onclick="uncolor()"></input>
+		</p>
+
+		<p>. </p>
+		<p>Tips:</p>
+		<p>You can type colors name<br> like "red" or colors HEX code like "#ff0000" .</p>
+		</div>
+	</body>
+
+	<head>
+
+
+
+		<meta charset="utf-8"/>
+	</head>
+
+</html>
+
+
+
+
+
+
+
+
+
+<script type="application/javascript">
+
+	var speed=30;
+	var height=20;
+	var width=20;
+	var unit =30;
+
+
+	var tail = 0;
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var snakeLength = 1;
+	var xPos = [];
+	var yPos = [];
+
+
+
+
+	var abilityMove = 0;
+	var direction="d";
+
+	var food=0;
+
+	var snakeColor = "#741b47";
+	var snakeBorderColor = "gray";
+
+
+	var planeColor = "#d9d2e9";
+	var planeBorderColor = "gray";
+
+	var foodColor = "#999999";
+	var foodBorderColor = "gray";
+
+
+	var xFood;
+	var yFood;
+	var start;
+
+	var everyI;
+
+
+
+
+
+	function lose(){
+
+		var alrt = snakeLength-tail+1;
+		alert("Your score is "+alrt+" . Play again?");
+
+		height=20;
+		width=20;
+		unit =30;
+
+		tail = 0;
+
+		canvas = document.getElementById("canvas");
+		ctx = canvas.getContext("2d");
+		snakeLength = 1;
+		xPos = [];
+		yPos = [];
+
+
+		abilityMove = 0;
+		direction="d";
+
+		food=0;
+
+
+		xFood;
+		yFood;
+		start;
+
+		everyI;
+
+		plane();
+		createVariables();
+		snake();
+		createFood();
+
+	}
+
+	function format(){
+
+		for (i = tail; i <= snakeLength; i++) {
+			rect((i-1)*unit,0,unit,unit,snakeColor,1,snakeBorderColor);
+		}
+
+	}
+
+	function color(){
+
+        var qqwe = document.getElementById("color1").value;
+        var aqwe = document.getElementById("color2").value;
+        var zqwe = document.getElementById("color3").value;
+        var xqwe = document.getElementById("color4").value;
+
+
+        snakeColor =  qqwe ;
+        planeColor =  aqwe ;
+        foodColor =   zqwe ;
+
+
+        snakeBorderColor =xqwe ;
+        planeBorderColor =  xqwe ;
+        foodBorderColor =  xqwe ;
+
+	}
+
+	function uncolor(){
+
+		snakeColor =  "#004d66" ;
+		planeColor =  "#ccf2ff" ;
+		foodColor =   "gray" ;
+
+
+		snakeBorderColor = "gray" ;
+		planeBorderColor =  "gray" ;
+		foodBorderColor =  "gray" ;
+
+
+		plane();
+		snake()
+		rect(xFood,yFood,unit,unit,foodColor,1,foodBorderColor);
+
+	}
+
+	function plane (){
+
+		for (i = 0; i < width; i++) {
+
+			for (j = 0; j < height; j++) {
+				rect(i*unit,j*unit,unit,unit,planeColor,1,planeBorderColor);
+			}
+
+		}
+
+	}
+
+	function snake(){
+
+		if(xPos[snakeLength]==0 && yPos[snakeLength]==0){
+
+			for (i = tail; i <= snakeLength; i++) {
+				rect((i-1)*unit,0,unit,unit,snakeColor,1,snakeBorderColor);
+
+			}
+
+		}
+
+	}
+
+	function moveRight(){
+
+		rect(xPos[snakeLength]+unit,yPos[snakeLength],unit,unit,snakeColor,1,snakeBorderColor);
+		rect(xPos[tail],yPos[tail],unit,unit,planeColor,1,planeBorderColor);
+		history();
+		xPos[snakeLength]=xPos[snakeLength]+unit;
+
+	}
+
+	function moveLeft(){
+
+		rect(xPos[snakeLength]-unit,yPos[snakeLength],unit,unit,snakeColor,1,snakeBorderColor);
+		rect(xPos[tail],yPos[tail],unit,unit,planeColor,1,planeBorderColor);
+		history();
+		xPos[snakeLength]=xPos[snakeLength]-unit;
+
+	}
+
+	function moveUp(){
+
+		rect(xPos[snakeLength],yPos[snakeLength]-unit,unit,unit,snakeColor,1,snakeBorderColor);
+		rect(xPos[tail],yPos[tail],unit,unit,planeColor,1,planeBorderColor);
+		history();
+		yPos[snakeLength]=yPos[snakeLength]-unit;
+
+	}
+
+	function moveDown(){
+
+		rect(xPos[snakeLength],yPos[snakeLength]+unit,unit,unit,snakeColor,1,snakeBorderColor);
+		rect(xPos[tail],yPos[tail],unit,unit,planeColor,1,planeBorderColor);
+		history();
+		yPos[snakeLength]=yPos[snakeLength]+unit;
+
+	}
+
+	function move(){
+
+			if(direction=="d" ){
+				moveRight();
+			}
+
+			if(direction=="a" ){
+				moveLeft();
+			}
+
+			if(direction=="w" ){
+				moveUp()
+			}
+
+			if(direction=="s" ){
+				moveDown();
+			}
+
+	}
+
+	function hitWall(){
+
+
+		if(direction=="a" && xPos[snakeLength]==0){
+			lose();
+		}
+
+		if(direction=="w" && yPos[snakeLength]==0){
+			lose();
+		}
+
+		if(direction=="d" && xPos[snakeLength]==(width-1)*unit){
+			lose();
+		}
+
+		if(direction=="s" && yPos[snakeLength]==(height-1)*unit){
+			lose();
+		}
+
+	}
+
+
+	function growUp(){
+
+		tail = tail-1;
+		history();
+		rect(xPos[tail],yPos[tail],unit,unit,snakeColor,1,snakeBorderColor);
+
+	}
+
+	function eat(){
+
+			if(direction=="d" && xPos[snakeLength]+unit==xFood && yPos[snakeLength]==yFood){
+				growUp();
+				createFood();
+			}
+
+			if(direction=="a" && xPos[snakeLength]-unit==xFood && yPos[snakeLength]==yFood){
+				growUp();
+				createFood();
+			}
+
+			if(direction=="w" && xPos[snakeLength]==xFood && yPos[snakeLength]-unit==yFood){
+				growUp();
+				createFood();
+			}
+
+			if(direction=="s" && xPos[snakeLength]==xFood && yPos[snakeLength]+unit==yFood){
+				growUp();
+				createFood();
+			}
+
+	}
+
+	function createFood(){
+
+		everyI=0;
+
+
+		xFood = Math.random();
+		yFood = Math.random();
+
+		xFood = xFood * (width-1);
+		yFood = yFood * (height-1);
+
+		xFood = xFood.toFixed(0)
+		yFood = yFood.toFixed(0)
+
+		xFood = xFood*unit;
+		yFood = yFood*unit;
+
+		for(i=tail; i<=snakeLength; i++){
+
+			if(xPos[i] == xFood && yPos[i] == yFood){
+                //alert("ERROR!!")
+				createFood();
+				return 0;
+
+			}
+
+		}
+
+		rect(xFood,yFood,unit,unit,foodColor,1,foodBorderColor);
+
+	}
+
+	function loose(){
+
+		var alrt = snakeLength-tail+1;
+		alert("Your score is "+alrt+".  Play again?");
+		location.reload();
+
+	}
+
+	function hitItSelf(){
+
+		for (i = tail; i < snakeLength-1; i++) {
+
+			if(direction=="d" && xPos[snakeLength]+unit==xPos[i] && yPos[snakeLength]==yPos[i]){
+				lose();
+				break;
+			}
+
+			if(direction=="a" && xPos[snakeLength]-unit==xPos[i] && yPos[snakeLength]==yPos[i]){
+				lose();
+				break;
+			}
+
+			if(direction=="w" && xPos[snakeLength]==xPos[i] && yPos[snakeLength]-unit==yPos[i]){
+				lose();
+				break;
+			}
+
+			if(direction=="s" && xPos[snakeLength]==xPos[i] && yPos[snakeLength]+unit==yPos[i]){
+				lose();
+				break;
+			}
+
+		}
+
+	}
+
+	function history(){
+
+		for (i = tail; i < snakeLength; i++) {
+
+			xPos[i]=xPos[i+1];
+			yPos[i]=yPos[i+1];
+
+		}
+	}
+
+	function go(){
+
+		 start = setInterval(function(){  main2(); }, speed);
+
+	}
+
+	function main(){
+
+		hitItSelf();
+		hitWall();
+		eat();
+		move();
+
+	}
+
+	function main2(){
+
+		if(abilityMove==1){
+
+			hitItSelf();
+			hitWall();
+			eat();
+			move();
+
+		}
+	}
+
+	createVariables();
+
+	function createVariables(){
+
+		for (i = tail; i <= snakeLength; ++i) {
+			xPos[i] = unit*(i-1);
+			yPos[i] = 0;
+		}
+
+	}
+
+	function rect(xPos,yPos,width,height,color,borderunit,borderColor){
+		ctx.fillStyle = color;
+		ctx.fillRect (xPos, yPos, width, height);
+		//value of the inside rectangles
+
+		ctx.strokeStyle = borderColor;
+		ctx.lineWidth   = borderunit;
+		ctx.strokeRect(xPos,yPos, width,height);
+		//value of the outside rectangles..Border
+	}
+
+	function myFunction(){abilityMove=1;}
+
+	window.onkeydown = function(event) {
+
+
+	   if (event.keyCode == 38 && direction !== "s") {
+           	abilityMove=0;
+			direction="w";
+			main();
+			setTimeout(myFunction, speed);
+	   }
+	   if (event.keyCode == 39 && direction !== "a") {
+			abilityMove=0;
+			direction="d";
+			main();
+			setTimeout(myFunction, speed);
+	   }
+	   if (event.keyCode == 40 && direction !== "w") {
+			abilityMove=0;
+			direction="s";
+			main();
+			setTimeout(myFunction, speed);
+	   }
+	   if (event.keyCode == 37 && direction !== "d") {
+			abilityMove=0;
+			direction="a";
+			main();
+			setTimeout(myFunction, speed);
+	   }
+	    if (event.keyCode == 59) {
+	    	for(k=0; k<10; k++){
+	    		growUp();
+	    	}
+		}
+
+	}
+
+	function play(){
+		color();
+		plane();
+		snake()
+		rect(xFood,yFood,unit,unit,foodColor,1,foodBorderColor);
+	}
+
+	plane();
+	snake();
+	go();
+	createFood();
+
+  </script>
